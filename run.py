@@ -5,6 +5,10 @@ import base64
 import json
 import os
 from Crypto.Cipher import AES
+
+# Absolute path to this script
+scriptdir = os.path.dirname(os.path.abspath(__file__))
+
 def dump(file_path):
     core_key = binascii.a2b_hex("687A4852416D736F356B496E62617857")
     meta_key = binascii.a2b_hex("2331346C6A6B5F215C5D2630553C2728")
@@ -65,13 +69,19 @@ def dump(file_path):
         m.write(chunk)
     m.close()
     f.close()
-if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1:
-        for file_path in sys.argv[1:]:
-            try:
-                dump(file_path)
-            except:
-                pass
-    else:
-        print("Usage: python ncmdump.py \"File Name\"")
+
+# Walk through directory
+for root, subfolders, files in os.walk(scriptdir):
+    for file in files:
+        try:
+            if file.endswith('.ncm') :
+                filePP = scriptdir + '/' + file
+                print('找到NCM音乐文件',filePP)
+                try:
+                    print('开始转换',file)
+                    dump(filePP)
+                except:
+                    pass
+        except:
+            pass
+
